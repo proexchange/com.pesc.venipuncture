@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <extension key="com.pesc.venipuncture" type="module">
   <file>venipuncture</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>Venipuncture</name>
+  <description>Create membership for users who register for a venipuncture course as a non-member</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>R2D2</author>

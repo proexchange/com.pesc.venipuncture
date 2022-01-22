@@ -166,22 +166,38 @@ function venipuncture_civicrm_navigationMenu(&$menu) {
 function venipuncture_civicrm_post($op, $objectName, $objectId, &$objectRef){
   if($op != 'create') return;
   if($objectName != 'Participant') return;
-  echo "<pre>";
+
   $contact_id = $objectRef->contact_id;
+  $event_id = $objectRef->event_id;
   $fee_level = $objectRef->fee_level;
-  
-  if(strpos($fee_level, 'Non-Member') !== false){
+
+  try {
+    $event = civicrm_api3('Event', 'getsingle', [
+      'id' => 47,
+      'return' => [ 'event_type_id' ]
+    ]);
+    if($event['event_type_id'] != 9) return;
+  }
+  catch(CiviCRM_API3_Exception $e) {
+    watchdog('com.pesc.venipuncture', $e->getMessage());
+  }
+
+  if(strpos($fee_level, 'Not a CSRT') !== false) {
     $result = civicrm_api3('Membership', 'get', [
       'sequential' => 1,
       'contact_id' => $contact_id,
       'active_only' => 1,
     ]);
     $has_membership = $result['count'] > 0 ? true : false;
-    if(!$has_membership){
+    if(!$has_membership) {
+      watchdog('com.pesc.venipuncture', 'Creating membership for Venipuncture Course participant, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
       $result = civicrm_api3('Membership', 'create', [
         'membership_type_id' => "Radiologic Technologist Member",
         'contact_id' => $contact_id,
       ]);
     }
-  } 
+    else {
+      watchdog('com.pesc.venipuncture', 'Venipuncture Course participant already has a membership, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
+    }
+  }
 }

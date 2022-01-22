@@ -182,7 +182,7 @@ function venipuncture_civicrm_post($op, $objectName, $objectId, &$objectRef){
     watchdog('com.pesc.venipuncture', $e->getMessage());
   }
 
-  if(strpos($fee_level, 'Not a CSRT') !== false) {
+  if(strpos($fee_level, 'Not a CSRT Member') !== false) {
     $result = civicrm_api3('Membership', 'get', [
       'sequential' => 1,
       'contact_id' => $contact_id,

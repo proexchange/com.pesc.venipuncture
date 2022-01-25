@@ -180,6 +180,7 @@ function venipuncture_civicrm_post($op, $objectName, $objectId, &$objectRef){
   }
   catch(CiviCRM_API3_Exception $e) {
     watchdog('com.pesc.venipuncture', $e->getMessage());
+    return;
   }
 
   //Create radiologic membership if not already a member

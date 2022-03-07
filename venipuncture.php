@@ -179,7 +179,7 @@ function venipuncture_civicrm_post($op, $objectName, $objectId, &$objectRef){
     if($event['event_type_id'] != 9) return;
   }
   catch(CiviCRM_API3_Exception $e) {
-    watchdog('com.pesc.venipuncture', $e->getMessage());
+    \Drupal::logger('com.pesc.venipuncture')->error($e->getMessage());
     return;
   }
 
@@ -192,14 +192,14 @@ function venipuncture_civicrm_post($op, $objectName, $objectId, &$objectRef){
     ]);
     $has_membership = $result['count'] > 0 ? true : false;
     if(!$has_membership) {
-      watchdog('com.pesc.venipuncture', 'Creating membership for Venipuncture Course participant, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
+      \Drupal::logger('com.pesc.venipuncture')->notice('Creating membership for Venipuncture Course participant, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>'));
       $result = civicrm_api3('Membership', 'create', [
         'membership_type_id' => "Radiologic Technologist Member",
         'contact_id' => $contact_id,
       ]);
     }
     else {
-      watchdog('com.pesc.venipuncture', 'Venipuncture Course participant already has a membership, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
+      \Drupal::logger('com.pesc.venipuncture') 'Venipuncture Course participant already has a membership, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
     }
   }
   //Create student membership != already has one
@@ -211,14 +211,14 @@ function venipuncture_civicrm_post($op, $objectName, $objectId, &$objectRef){
     ]);
     $has_membership = $result['count'] > 0 ? true : false;
     if(!$has_membership) {
-      watchdog('com.pesc.venipuncture', 'Creating membership for Venipuncture Course participant, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
+      \Drupal::logger('com.pesc.venipuncture') 'Creating membership for Venipuncture Course participant, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
       $result = civicrm_api3('Membership', 'create', [
         'membership_type_id' => "RT or XT Student Member",
         'contact_id' => $contact_id,
       ]);
     }
     else {
-      watchdog('com.pesc.venipuncture', 'Venipuncture Course participant already has a membership, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
+      \Drupal::logger('com.pesc.venipuncture') 'Venipuncture Course participant already has a membership, see details below:<br><pre>'.print_r($objectRef, 1).'</pre>');
     }
   }
 }
